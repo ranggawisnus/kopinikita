@@ -50,15 +50,15 @@
 
 .product-card {
   max-width: 180px;
-  height: 230px;
+  height: 200px;
   border: 1px solid $border-color;
   text-align: center;
   position: relative;
   background: $white;
-  // box-shadow: 0 10px 15px rgba(0, 0, 0, .05);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   // margin: auto;
-  // animation: slide-up .3s ease;
+  animation: slide-up 0.3s ease;
 
   &:hover {
     cursor: pointer;
@@ -128,10 +128,12 @@
 
 .product-details {
   padding: $m-size;
+  margin-top: 7.5%;
 }
 
 .product-card-price {
   color: $black;
+  margin: 0 0;
 }
 
 .product-card-name {
