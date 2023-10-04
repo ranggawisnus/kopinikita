@@ -1,28 +1,34 @@
 /* eslint-disable indent */
 import {
-  DownOutlined, LoadingOutlined, LogoutOutlined, UserOutlined
-} from '@ant-design/icons';
-import { ACCOUNT } from '@/constants/routes';
-import PropTypes from 'prop-types';
-import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import { signOut } from '@/redux/actions/authActions';
+  DownOutlined,
+  LoadingOutlined,
+  LogoutOutlined,
+  UserOutlined,
+  DesktopOutlined,
+} from "@ant-design/icons";
+import { ACCOUNT, ADMIN_DASHBOARD, HOME } from "@/constants/routes";
+import PropTypes from "prop-types";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
+import { signOut } from "@/redux/actions/authActions";
+import { useLocation } from "react-router-dom";
 
 const UserNav = () => {
   const { profile, isAuthenticating } = useSelector((state) => ({
     profile: state.profile,
-    isAuthenticating: state.app.isAuthenticating
+    isAuthenticating: state.app.isAuthenticating,
   }));
+  const { pathname } = useLocation();
   const userNav = useRef(null);
   const dispatch = useDispatch();
 
   const toggleDropdown = (e) => {
-    const closest = e.target.closest('div.user-nav');
+    const closest = e.target.closest("div.user-nav");
 
     try {
-      if (!closest && userNav.current.classList.contains('user-sub-open')) {
-        userNav.current.classList.remove('user-sub-open');
+      if (!closest && userNav.current.classList.contains("user-sub-open")) {
+        userNav.current.classList.remove("user-sub-open");
       }
     } catch (err) {
       console.log(err);
@@ -30,13 +36,13 @@ const UserNav = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('click', toggleDropdown);
+    document.addEventListener("click", toggleDropdown);
 
-    return () => document.removeEventListener('click', toggleDropdown);
+    return () => document.removeEventListener("click", toggleDropdown);
   }, []);
 
   const onClickNav = () => {
-    userNav.current.classList.toggle('user-sub-open');
+    userNav.current.classList.toggle("user-sub-open");
   };
 
   return isAuthenticating ? (
@@ -49,35 +55,40 @@ const UserNav = () => {
     <div
       className="user-nav"
       onClick={onClickNav}
-      onKeyDown={() => { }}
+      onKeyDown={() => {}}
       ref={userNav}
       role="button"
-      tabIndex={0}
-    >
-      <h5 className="text-overflow-ellipsis">{profile.fullname && profile.fullname.split(' ')[0]}</h5>
+      tabIndex={0}>
+      <h5 className="text-overflow-ellipsis">
+        {profile.fullname && profile.fullname.split(" ")[0]}
+      </h5>
       <div className="user-nav-img-wrapper">
-        <img
-          alt=""
-          className="user-nav-img"
-          src={profile.avatar}
-        />
+        <img alt="" className="user-nav-img" src={profile.avatar} />
       </div>
-      <DownOutlined style={{ fontSize: '1.2rem', marginLeft: '1rem' }} />
+      <DownOutlined style={{ fontSize: "1.2rem", marginLeft: "1rem" }} />
       <div className="user-nav-sub">
-        {profile.role !== 'ADMIN' && (
-          <Link
-            to={ACCOUNT}
-            className="user-nav-sub-link"
-          >
+        {profile.role !== "ADMIN" && (
+          <Link to={ACCOUNT} className="user-nav-sub-link">
             View Account
             <UserOutlined />
           </Link>
         )}
+        {profile.role === "ADMIN" &&
+          (pathname.includes("admin") ? (
+            <Link to={HOME} className="user-nav-sub-link">
+              Home
+              <DesktopOutlined />
+            </Link>
+          ) : (
+            <Link to={ADMIN_DASHBOARD} className="user-nav-sub-link">
+              Dashboard
+              <DesktopOutlined />
+            </Link>
+          ))}
         <h6
           className="user-nav-sub-link margin-0 d-flex"
           onClick={() => dispatch(signOut())}
-          role="presentation"
-        >
+          role="presentation">
           Sign Out
           <LogoutOutlined />
         </h6>
@@ -87,7 +98,7 @@ const UserNav = () => {
 };
 
 UserNav.propType = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default withRouter(UserNav);
